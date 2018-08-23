@@ -120,3 +120,40 @@ uniprot.list <- read.delim("~/Documentos/TFM/uniprot_list.tab")
 uniprot.list.factors<-as.data.frame(unique(uniprot.list[,2]))
 ```
 
+FIMO list:
+```{bash}
+mkdir tests_bb
+
+cd $_
+# retrieving transfac+fimo
+wget https://noble.gs.washington.edu/custom-tracks/fimo.hg19.transfac-0.1.bb
+
+# getting the exec for linux 64 bits
+
+rsync -aP rsync://hgdownload.soe.ucsc.edu/genome/admin/exe/linux.x86_64/bigBedToBed .
+
+# making it runnable
+
+chmod a+x bigBedToBed
+
+# converting to bed
+
+./bigBedToBed fimo.hg19.transfac-0.1.bb test.bed
+
+# checking how a bedfile looks like
+
+head test.bed
+
+# counting the TFBS by TF (head)
+
+cut -f4 test.bed | sort | uniq -c | head
+
+cut -f4 test.bed | sort | uniq -c > test_bed_list.txt
+```
+
+```{r}
+test.bed.list.factors<-read.table("~/Documentos/TFM/tests_bb/test_bed_list.txt", quote="\"", comment.char="")
+colnames(test.bed.list.factors)<- c("Number", "Factor")
+head(test.bed.list.factors)
+BRCA.data$Hybridization.REF
+```
