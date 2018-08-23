@@ -26,6 +26,7 @@ Incorporing the dataset to R:
 ```{r}
 PRAD.data<-read.delim("~/Documentos/TFM/gdac.broadinstitute.org_PRAD.Merge_rnaseqv2__illuminahiseq_rnaseqv2__unc_edu__Level_3__RSEM_genes_normalized__data.Level_3.2016012800.0.0/PRAD.rnaseqv2__illuminahiseq_rnaseqv2__unc_edu__Level_3__RSEM_genes_normalized__data.data.txt")
 head(PRAD.data)
+PRAD.data$Hybridization.REF
 ```
 
 
@@ -102,4 +103,20 @@ dim(PRAD.data)
 ```
 
 Those all genes we select only a few (transcript factors only)
+
+Preparation of TF lists:
+```{r}
+uscs.list<-read.delim("~/Documentos/TFM/uscs_list", header = FALSE)
+uscs.list<-uscs.list[-1,3:4]
+colnames(uscs.list)<- c("Cell Line", "Factor")
+head(uscs.list)
+uscs.list[!apply(uscs.list == "", 1, all),]
+uscs.list.factors<-as.data.frame(unique(uscs.list[,2]))
+uscs.list.factors<-as.data.frame(uscs.list.factors[-1, ])
+```
+
+```{r}
+uniprot.list <- read.delim("~/Documentos/TFM/uniprot_list.tab")
+uniprot.list.factors<-as.data.frame(unique(uniprot.list[,2]))
+```
 
