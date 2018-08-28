@@ -157,7 +157,6 @@ cut -f4 test.bed | sort | uniq -c > test_bed_list.txt
 test.bed.list.factors<-read.table("~/Documentos/TFM/tests_bb/test_bed_list.txt", quote="\"", comment.char="")
 colnames(test.bed.list.factors)<- c("Number", "Factor")
 head(test.bed.list.factors)
-BRCA.data[grep("ZNF148", BRCA.data$Hybridization.REF),]
 ```
 Once we have our TF list we need to transfer the TRANSFAC codes to gene_ID of HGNC symbols, in order to do that we use the package biomaRt from bioconductor (first installation will take some time):
 ```{r eval=FALSE, include=FALSE}
@@ -187,12 +186,33 @@ listFilters(dataset)
 listAttributes(dataset)
 
 # To get the ensembl gene id belonging to the SNPs
-hgnc.factor.list<-getBM(attributes=c('hgnc_symbol', 'hgnc_id'), 
+hgnc.factor.list<-getBM(attributes=c('hgnc_symbol'), 
       filters = 'external_gene_name', 
       values = test.bed.list.factors$Factor, 
       mart = dataset)
-  
-test.bed.list.factors$Factor
+
+hgnc.factor.list<-as.list(hgnc.factor.list)
+(hgnc.factor.list)
+```
+For the next step we take the names of the hgnc.tf list and put them exactly like this, in order to chose the exact TFs.
+25 TF in our list, 25 in the list we have.
+Gathering the TF from our samples (TCGA)
+```{r}
+#For BRCA:
+brca.TF.list<-BRCA.data[unique(grep(paste(c("\\bTBX22\\b", "\\bSRF\\b", "\\bCTCF\\b", "\\bSTAT1\\b", "\\bAR\\b", "\\bSP4\\b", "\\bYY1\\b", "\\bSMAD4\\b", "\\bMZF1\\b", "\\bVDR\\b", "\\bLMO2\\b", "\\bGC\\b", "\\bHIC1\\b", "\\bPBX1\\b", "\\bSP3\\b", "\\bRFX1\\b", "\\bFOXP1\\b", "\\bFOXJ2\\b", "\\bPITX2\\b", "\\bREST\\b", "\\bNRG1\\b", "\\bZNF219\\b", "\\bHSF1\\b", "\\bSP1\\b", "\\bTBX15\\b"),collapse = "|"), BRCA.data$Hybridization.REF)),]
 ```
 
+```{r}
+#For COAD:
+coad.TF.list<-COAD.data[unique(grep(paste(c("\\bTBX22\\b", "\\bSRF\\b", "\\bCTCF\\b", "\\bSTAT1\\b", "\\bAR\\b", "\\bSP4\\b", "\\bYY1\\b", "\\bSMAD4\\b", "\\bMZF1\\b", "\\bVDR\\b", "\\bLMO2\\b", "\\bGC\\b", "\\bHIC1\\b", "\\bPBX1\\b", "\\bSP3\\b", "\\bRFX1\\b", "\\bFOXP1\\b", "\\bFOXJ2\\b", "\\bPITX2\\b", "\\bREST\\b", "\\bNRG1\\b", "\\bZNF219\\b", "\\bHSF1\\b", "\\bSP1\\b", "\\bTBX15\\b"),collapse = "|"), COAD.data$Hybridization.REF)),]
+```
 
+```{r}
+#For LUAD:
+luad.TF.list<-LUAD.data[unique(grep(paste(c("\\bTBX22\\b", "\\bSRF\\b", "\\bCTCF\\b", "\\bSTAT1\\b", "\\bAR\\b", "\\bSP4\\b", "\\bYY1\\b", "\\bSMAD4\\b", "\\bMZF1\\b", "\\bVDR\\b", "\\bLMO2\\b", "\\bGC\\b", "\\bHIC1\\b", "\\bPBX1\\b", "\\bSP3\\b", "\\bRFX1\\b", "\\bFOXP1\\b", "\\bFOXJ2\\b", "\\bPITX2\\b", "\\bREST\\b", "\\bNRG1\\b", "\\bZNF219\\b", "\\bHSF1\\b", "\\bSP1\\b", "\\bTBX15\\b"),collapse = "|"), LUAD.data$Hybridization.REF)),]
+```
+
+```{r}
+#For PRAD:
+prad.TF.list<-PRAD.data[unique(grep(paste(c("\\bTBX22\\b", "\\bSRF\\b", "\\bCTCF\\b", "\\bSTAT1\\b", "\\bAR\\b", "\\bSP4\\b", "\\bYY1\\b", "\\bSMAD4\\b", "\\bMZF1\\b", "\\bVDR\\b", "\\bLMO2\\b", "\\bGC\\b", "\\bHIC1\\b", "\\bPBX1\\b", "\\bSP3\\b", "\\bRFX1\\b", "\\bFOXP1\\b", "\\bFOXJ2\\b", "\\bPITX2\\b", "\\bREST\\b", "\\bNRG1\\b", "\\bZNF219\\b", "\\bHSF1\\b", "\\bSP1\\b", "\\bTBX15\\b"),collapse = "|"), PRAD.data$Hybridization.REF)),]
+```
