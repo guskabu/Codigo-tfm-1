@@ -149,11 +149,50 @@ head test.bed
 cut -f4 test.bed | sort | uniq -c | head
 
 cut -f4 test.bed | sort | uniq -c > test_bed_list.txt
+
+
 ```
 
 ```{r}
 test.bed.list.factors<-read.table("~/Documentos/TFM/tests_bb/test_bed_list.txt", quote="\"", comment.char="")
 colnames(test.bed.list.factors)<- c("Number", "Factor")
 head(test.bed.list.factors)
-BRCA.data$Hybridization.REF
+BRCA.data[grep("ZNF148", BRCA.data$Hybridization.REF),]
 ```
+Once we have our TF list we need to transfer the TRANSFAC codes to gene_ID of HGNC symbols, in order to do that we use the package biomaRt from bioconductor (first installation will take some time):
+```{r eval=FALSE, include=FALSE}
+#source("https://bioconductor.org/biocLite.R")
+biocLite("biomaRt")
+```
+
+```{r}
+library("biomaRt")
+
+# To show which marts are available
+listMarts()
+
+# You need the SNP mart
+mart <- useMart("ensembl")
+
+# Find homo sapiens
+listDatasets(mart)
+
+# This will be the dataset we want to use
+dataset <- useDataset("hsapiens_gene_ensembl", mart=mart)
+
+# Show available filters
+listFilters(dataset)
+
+# Now list all available attributes
+listAttributes(dataset)
+
+# To get the ensembl gene id belonging to the SNPs
+hgnc.factor.list<-getBM(attributes=c('hgnc_symbol', 'hgnc_id'), 
+      filters = 'external_gene_name', 
+      values = test.bed.list.factors$Factor, 
+      mart = dataset)
+  
+test.bed.list.factors$Factor
+```
+
+
