@@ -216,3 +216,22 @@ luad.TF.list<-LUAD.data[unique(grep(paste(c("\\bTBX22\\b", "\\bSRF\\b", "\\bCTCF
 #For PRAD:
 prad.TF.list<-PRAD.data[unique(grep(paste(c("\\bTBX22\\b", "\\bSRF\\b", "\\bCTCF\\b", "\\bSTAT1\\b", "\\bAR\\b", "\\bSP4\\b", "\\bYY1\\b", "\\bSMAD4\\b", "\\bMZF1\\b", "\\bVDR\\b", "\\bLMO2\\b", "\\bGC\\b", "\\bHIC1\\b", "\\bPBX1\\b", "\\bSP3\\b", "\\bRFX1\\b", "\\bFOXP1\\b", "\\bFOXJ2\\b", "\\bPITX2\\b", "\\bREST\\b", "\\bNRG1\\b", "\\bZNF219\\b", "\\bHSF1\\b", "\\bSP1\\b", "\\bTBX15\\b"),collapse = "|"), PRAD.data$Hybridization.REF)),]
 ```
+
+Now we have our TF, let's see if they have singnificant variations over patients:
+In order to do that, we will compare the normal tissue, tumor and control samples, which we can identify by the TCGA code.
+(Tumor types range from 01 - 09, normal types from 10 - 19 and control samples from 20 - 29. )
+
+tumor
+```{r}
+#El 06A esta tambien, por eso hay diferencias:
+prad.TF.list.tumor<-prad.TF.list[unique(grep(paste(c("\\b.01B","\\b.01A","\\b.02A","\\b.03A","\\b.04A","\\b.05A","\\b.06A","\\b.07A","\\b.08A","\\b.09A"),collapse = "|"), names(prad.TF.list)))]
+head(prad.TF.list.tumor)
+
+```
+normal
+```{r}
+prad.TF.list.normal<-prad.TF.list[unique(grep(paste(c("\\b.10A","\\b.11A","\\b.11B","\\b.12A","\\b.13A","\\b.14A","\\b.15A","\\b.16A","\\b.17A","\\b.18A","\\b.19A"),collapse = "|"), names(prad.TF.list)))]
+head(prad.TF.list.normal)
+```
+
+
